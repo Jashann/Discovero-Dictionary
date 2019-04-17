@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Discovero-Dictionary</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <style>
+    #search button[type="submit"]
+    {
+      border-radius: 0;
+    }
+    .lead
+    {
+      font-size: 1.5em;
+    }
+    #dictionary ol li::first-letter
+    {
+      text-transform: capitalize;
+    }
+    #dictionary ol
+    {
+      padding: 0 0 0 16px;
+    }
+    #dictionary .card .breadcrumb-item > a:hover
+    {
+      text-decoration: none;
+    } 
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <div class="container">
+      <a href="index.html" class="navbar-brand lead">Discovero Dictionary</a>
+      <button data-target="#navbar-2" data-toggle="collapse" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+      <div id="navbar-2" class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a href="" class="nav-link active text-uppercase">Search Mode</a></li>
+          <li class="nav-item"><a href="#bookmarkModal" data-toggle="modal" class="nav-link text-uppercase">Bookmarked Words</a></li>
+          <li class="nav-item"><a href="#recentModal" data-toggle="modal" class="nav-link text-uppercase">Recent Searches</a></li>
+        </ul>
+     </div>
+    </div>
+  </nav>
+
+  <section id="dictionary" class="my-5 p-4 bg-light">
+    <div class="container">
+      <form id="search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search a word">
+            <button type="submit" class="px-5 btn btn-info"><i class="fas fa-search"></i></button>
+          </div>
+      </form>
+
+      <div class="modal fade" id="recentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Recent Words</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <ol class="breadcrumb p-4" id="recent-ol">
+                  </ol>
+              </div>
+              <div class="modal-footer justify-content-center">
+                <span class="lead">Searched words are shown here...</span>
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="bookmarkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Bookmarked Words</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <ol class="breadcrumb p-4" id="bookmark-ol">
+                    </ol>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <span class="lead">Bookmarked words are shown here...</span>
+                  <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+      <!-- <div class="card card mt-4 p-4">
+        <div class="card-title lead">
+          Did you mean this?
+        </div>
+        <ol class="breadcrumb p-4">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Library</a></li>
+          <li class="breadcrumb-item"> <a href="#">Data</a></li>
+        </ol>
+      </div> -->
+
+      <!-- <div class="card mt-4 p-4" id="results">
+        <h3 class="lead" id="s-word">love 
+          <a class="ml-2  my-auto text-info" href="#"><span class="fas fa-volume-up"></span></a>
+          <a data-toggle="tooltip" data-placement="top" title="Bookmark The Word" class="ml-2  my-auto text-dark" href="#"><span class="fas fa-bookmark"></span></a>
+        </h3>
+        <hr>
+        <div class="response reponse-1">
+          <h4 class="lead">Love (Noun)
+             <a class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-volume-up"></span></a>
+             <a data-toggle="tooltip" data-placement="top" title="Bookmark The Word" class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-bookmark"></span></a>
+          </h4>
+          <ol
+            <li>An intense feeling of deep affection.</li>
+            <li> A strong feeling of affection and sexual attraction for someone.</li>
+          </ol>
+        </div>
+        <div class="response reponse-2">
+            <h4 class="lead">Love (Verb)
+               <a class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-volume-up"></span></a> 
+               <a data-toggle="tooltip" data-placement="top" title="Bookmark The Word" class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-bookmark"></span></a>  
+            </h4>
+            <ol>
+              <li>Feel deep affection or sexual love for (someone)</li>
+              <li>Like or enjoy very much.</li>
+            </ol>
+        </div>
+        <div class="response reponse-3">
+            <h4 class="lead">Fall in Love (Phrase) 
+              <a class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-volume-up"></span></a> 
+              <a data-toggle="tooltip" data-placement="top" title="Bookmark The Word" class="ml-2  my-auto text-secondary" href="#"><span class="fas fa-bookmark"></span></a>  
+            </h4>
+            <ol>
+              <li>Develop a deep romantic or sexual attachment to someone.</li>
+              <li>Develop a deep liking for something.</li>
+            </ol>
+        </div> -->
+    </div>
+  </section>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script>
+    $(function(){
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
