@@ -365,17 +365,20 @@ const App = (function()
       {
         if(e.target.className.includes("suggestedWord"))
         {
+          e.preventDefault();
           let word = e.target.textContent;
           searchWord(word);
         }
         if(e.target.className.includes("fas fa-bookmark"))
         {
+          e.preventDefault();
           let word = e.target.parentElement.parentElement.textContent.trim(); // trim is used to remove spaces.
           Data.LSBookmarkHandler(word);
           loadBookmark();
         }
         if(e.target.className === 'fas fa-volume-up')
         {
+          e.preventDefault();
           let wordWithType = e.target.parentElement.parentElement.textContent;
           let wordArr = wordWithType.split("(",1);
           let word = wordArr[0];
