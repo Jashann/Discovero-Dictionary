@@ -4,7 +4,16 @@
 
 const Data = (function()
 {
-  const key = "4717cd5b-0579-465b-9bb9-df453c75c7cc"
+  const key = "4717cd5b-0579-465b-9bb9-df453c75c7cc";
+  let msg = new SpeechSynthesisUtterance;
+
+  let voiceConfig = 
+  {
+    pitch : 1,
+    rate : 1,
+    voice : undefined,
+  }
+
   getData = async function(word)
   {
     localStorageRecentHandler(word);
@@ -42,6 +51,37 @@ const Data = (function()
       arr.push(word)
       localStorage.setItem('bookmarked',JSON.stringify(arr));
     }
+  },
+  localStorageTextToSpeechHandler = function()
+  {
+   for(ob in voiceConfig)
+    JSON.stringify("voice",JSON.stringify(obj));
+  }
+  ,
+  getVoices = function(callback)
+  {
+    window.speechSynthesis.onvoiceschanged = function()
+    {
+      let voices = speechSynthesis.getVoices();
+      voices = voices.filter(voice =>
+      {
+        if(voice.lang.includes('en'))
+          return voice;
+      });
+      callback(voices);
+    }
+  }
+  ,
+  saveVoiceConfigToLS = function()
+  {
+    let x = 0;
+    for(let i in voiceConfig)
+    {
+      if(voiceConfig[i]===undefined || voiceConfig[i]===null)
+        x++;
+    }
+    if(x===0)
+      localStorage.setItem('voiceConfig',JSON.stringify(voiceConfig));
   }
   
 
@@ -50,15 +90,49 @@ const Data = (function()
     getRecentWords : function()
     {
       return JSON.parse(localStorage.getItem('recent'));
-    },
+    }
+    ,
     LSBookmarkHandler : LSBookmarkHandler,
     getBookmarkWords : function()
     {
       return JSON.parse(localStorage.getItem('bookmarked'));
     }
+    ,
+    getVoices : getVoices,
+    setMsgToBeSpoken : function(text)
+    {
+      msg.text = text; 
+    },
+    setPitch: function(pitch)
+    {
+      msg.pitch = pitch 
+      voiceConfig.pitch = pitch;
+    }
+    ,
+    setRate : function(rate)
+    {
+      msg.rate = rate; 
+      voiceConfig.rate = rate;
+    }
+    ,
+    setVoice : function(voice)
+    {
+      msg.voice = voice;
+      voiceConfig.voice = voice.name;
+    }
+    ,
+    getMessageToBeSpoken : function()
+    {
+      return msg;
+    }
+    ,
+    saveVoiceConfigToLS : saveVoiceConfigToLS,
+    getVoiceConfig : function()
+    {
+      return JSON.parse(localStorage.getItem('voiceConfig'));
+    }
   }
 })();
-
 const UICtrl = (function()
 {
   const UISelectors = 
@@ -69,6 +143,15 @@ const UICtrl = (function()
     suggestionCard : dictionary.querySelector(".card > .breadcrumb"),
     recentOl : dictionary.querySelector('#recent-ol'),
     bookmarkOl : dictionary.querySelector('#bookmark-ol'),
+    speechApp : document.querySelector("#textSpeech"),
+    selectSpeech : document.querySelector("#voices"),
+    textMsg : document.querySelector("#text-msg"),
+    rateBadge : document.querySelector("#rate-badge"),
+    pitchBadge : document.querySelector("#pitch-badge"),
+    rate : document.querySelector("#input-rate"),
+    pitch : document.querySelector("#input-pitch"),
+    stopBtn : document.querySelector("#stop-btn"),
+    speakBtn : document.querySelector("#speak-btn"),
   }
   ,
   receiveResponse = function(res)
@@ -188,6 +271,17 @@ const UICtrl = (function()
       })
     }
   }
+  ,
+  populateSelect = function(voices,index)
+  {
+    voices.forEach(function(voice)
+    {
+      let option = document.createElement('option');
+      option.textContent = voice.name;
+      UISelectors.selectSpeech.append(option);
+    });
+    UISelectors.selectSpeech.value = voices[index-1].name;
+  }
 
   return{
     receiveResponse : receiveResponse,
@@ -197,12 +291,14 @@ const UICtrl = (function()
     },
     displayRecent : displayRecent,
     displayBookmark : displayBookmark,
+    populateSelect : populateSelect,
   }
 })();
 
 const App = (function()
 {
   let selectors;
+  let voices;
 
   return{
     init : function()
@@ -263,7 +359,8 @@ const App = (function()
               alert("Something Went Wrong");
           });
           loadRecent();
-      },
+      }
+      ,
       dictionary.onclick = function(e)
       {
         if(e.target.className.includes("suggestedWord"))
@@ -277,7 +374,102 @@ const App = (function()
           Data.LSBookmarkHandler(word);
           loadBookmark();
         }
+        if(e.target.className === 'fas fa-volume-up')
+        {
+          let wordWithType = e.target.parentElement.parentElement.textContent;
+          let wordArr = wordWithType.split("(",1);
+          let word = wordArr[0];
+          Data.setMsgToBeSpoken(word);
+          let utterance = Data.getMessageToBeSpoken();
+          speechSynthesis.speak(utterance);
+        }
       }
+      ,
+      speak = function()
+      {
+        Data.setMsgToBeSpoken(selectors.textMsg.value);
+        let utterance = Data.getMessageToBeSpoken();
+        speechSynthesis.speak(utterance);
+        Data.saveVoiceConfigToLS();
+      }
+      ,
+      selectors.speakBtn.onclick = speak,
+      selectors.selectSpeech.onchange = function()
+      {
+        let name = selectors.selectSpeech.value;
+        let voice = voices.filter(function(voice)
+        {
+          if(voice.name === name)
+            return voice;
+        });
+        Data.setVoice(voice[0]);
+        speak();
+        Data.saveVoiceConfigToLS();
+      }
+      ,
+      selectors.stopBtn.onclick = function()
+      {
+        if(speechSynthesis.speaking)
+        {
+          speechSynthesis.cancel();
+        }
+      }
+      ,
+      handleRate = function()
+      {
+        let value = selectors.rate.value;
+        selectors.rateBadge.textContent = value;
+        Data.setRate(value);
+      }
+      ,
+      selectors.rate.onchange = handleRate,
+      handlePitch = function()
+      {
+        let value = selectors.pitch.value;
+        selectors.pitchBadge.textContent = value;
+        Data.setPitch(value);
+      }
+      ,
+      selectors.pitch.onchange = handlePitch,
+      receiveVoiceConfig = (function()
+      {
+        let voice;
+        let obj = Data.getVoiceConfig();
+        if(obj!==null)
+        {
+          Data.getVoices(function(res)
+          {
+            let x=0;
+            voices = res;
+            res.forEach(voice=>
+            {
+              x++;
+              if(voice.name === obj.voice)
+              {
+                Data.setVoice(voice);
+              }
+            })
+            UICtrl.populateSelect(res,x);
+          });
+          selectors.pitch.value = obj.pitch;
+          selectors.pitchBadge.textContent = obj.pitch;
+          Data.setPitch(obj.pitch);
+          selectors.rateBadge.textContent = obj.rate;
+          selectors.rate.value = obj.rate;
+          Data.setRate(obj.pitch);
+        }
+        else
+        {
+          Data.getVoices(function(res)
+          {
+            UICtrl.populateSelect(res,0);
+            Data.setVoice(res[0]);
+            Data.setPitch(1);
+            Data.setRate(1);
+            voices = res;
+          })
+        }
+      })()
     } // End of init
   }
 })();
