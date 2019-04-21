@@ -462,7 +462,7 @@ const App = (function()
         {
           Data.getVoices(function(res)
           {
-            UICtrl.populateSelect(res,0);
+            UICtrl.populateSelect(res,1);
             Data.setVoice(res[0]);
             Data.setPitch(1);
             Data.setRate(1);
