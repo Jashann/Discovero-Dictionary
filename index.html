@@ -11,6 +11,23 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="shortcut icon" href="favicon-book.ico" type="image/x-icon">
   <style>
+    @font-face
+    {
+      font-family: firstfont;
+      src: url("./resources/GOGOIA-Deco.otf");
+    }
+    @font-face
+    {
+      font-family: secondfont;
+      src: url("./resources/Prime-Light.otf");
+    }
+    *
+    {
+      font-family: secondfont;
+    }
+    h1,h2,h3,h4,h5,h6{
+      font-family: firstfont;
+    }
     #search button[type="submit"]
     {
       border-radius: 0;
@@ -34,6 +51,7 @@
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
       <a href="index.html" class="navbar-brand lead">Discovero Dictionary</a>
@@ -192,6 +210,12 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="./particles.js-master/particles.js"></script>
+  <script>
+    particlesJS.load('particles.js', 'particlesjs-config.json', function() {
+    console.log('callback - particles.js config loaded');
+  });
+  </script>
   <script>
     $(function(){
       $('[data-toggle="tooltip"]').tooltip()
